@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Que peixe é esse?</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <div class="envieafoto">
+
+    <label>
+      <h1>🐟 Envie a foto do peixe!</h1>
+      <input onchange="lerFoto()" type="file" accept="image/*" class="foto">
+    </label>
+
+  </div>
+
+  <div class="descricao">
+    
+      <h2>Espécie:</h2>
+      <p class="especie"></p>
+      <h3>Cuidados:</h3>
+      <p class="cuidados"></p>
+    
+  </div>
+
+
+  <div class="litros"> 
+  
+     <h4>Calcule os litros do seu Aquário:</h4>
+  
+     <input type="number" class="comprimento" placeholder="Comprimento">
+     <input type="number" class="altura" placeholder="Altura">
+     <input type="number" class="largura" placeholder="Largura">
+     <button value="Calcular" onclick="calcularLitros()">Calcular</button>
+     <p><span class="litros-resultado"></span> Litros</p>
+
+
+</div>
+
+
+
+  <script src="https://js.puter.com/v2/"></script>
+
+  <script src="script.js"></script>
+
+
+</body>
+
+</html>
