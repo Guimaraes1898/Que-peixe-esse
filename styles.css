@@ -1,19 +1,44 @@
+/* Seu reset básico para zerar margens e paddings padrão dos navegadores */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Regra para imagens, vídeos e canvas para garantir que não ultrapassem o container e mantenham a proporção */
+img, video, canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/*
+  ALETRAÇÕES PARA O BACKGROUND:
+  Garantem que o HTML e o BODY ocupem 100% da altura da viewport,
+  que a imagem de fundo cubra todo o espaço, não se repita e fique fixa.
+*/
+html, body {
+  height: 100%; /* Garante que HTML e BODY podem se expandir */
+  min-height: 100vh; /* Garante que eles ocupem pelo menos 100% da altura da viewport (altura visível da tela) */
+}
+
 body {
   background-image: url('background.site.jpg');
-  background-size: cover; 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center center;
   text-align: center;
-
-}
-  body {
   font-family: Arial, sans-serif;
-  color: #477cf1d6;
+  color: #22304a;
+  font-weight: bold;
   margin: 10px auto;
   padding: 40px 20px;
-  
 }
 
+/* Estilo padrão para todas as divs no seu layout */
 div {
-  max-width: 420px;
+  max-width: 420px; /* Largura máxima padrão para desktops */
   margin: 16px auto;
   background: #178528f1;
   color: #22304a;
@@ -22,38 +47,34 @@ div {
   box-shadow: 0 8px 20px rgba(34, 48, 74, 0.12);
 }
 
-
+/* Estilo para o h1 dentro de qualquer div */
 div h1 {
-  font-size: 26px;
+  font-size: 26px; /* Tamanho padrão para desktop */
   margin: 8px 0;
   line-height: 1.4;
   text-align: center;
   font-family: Arial, sans-serif;
-  color: #145af0fe;
+  color: #100386; /* Cor padrão do seu título */
+  font-weight: bold;
   cursor: pointer;
 }
 
+/* Estilo para h2 e h3 dentro de qualquer div */
 div h2, div h3 {
-
-  font-size: 20px;
+  font-size: 20px; /* Tamanho padrão para desktop */
   margin: 8px 0;
   line-height: 1.4;
-  
-
 }
 
-
-
-
+/* Estilo para o input dentro da div .envieafoto */
 .envieafoto input {
-  
-  display: none;
+  display: none; /* Oculta o input padrão de arquivo */
   cursor:pointer;
 }
 
+/* Estilo para os inputs dentro da div .litros */
 .litros input {
-  
-  display: block;
+  display: block; /* Cada input ocupa sua própria linha */
   margin: 4px auto;
   font-size: 15px;
   padding: 12px;
@@ -62,29 +83,65 @@ div h2, div h3 {
   background: #dbf89bcb;
 }
 
+/* Estilo para o botão dentro da div .litros */
 .litros button {
   margin: 4px auto;
   font-weight: bold;
   background: #dbf89bcb;
-  color: #145af0fe;
+  color: #22304a;
   border: none;
   border-radius: 12px;
   padding: 12px 20px;
-
-
-
-
 }
 
+/* --- MEDIA QUERIES PARA RESPONSIVIDADE --- */
 
+/* Para telas menores que 768px (tablets e celulares) */
+@media screen and (max-width: 768px) {
+  body {
+    padding: 20px 10px; /* Reduz o padding do body em telas menores */
+  }
 
+  div {
+    max-width: 90%; /* As divs ocuparão 90% da largura da tela */
+    margin: 12px auto; /* Reduz o margin entre as divs */
+    padding: 18px; /* Reduz o padding interno das divs */
+  }
 
+  div h1 {
+    font-size: 22px; /* Reduz o tamanho do h1 para mobile */
+    color: #120167
+  }
 
+  div h2, div h3 {
+    font-size: 18px; /* Reduz o tamanho de h2 e h3 para mobile */
+  }
 
+  /* Cor dourada para h2 e h3 dentro de .descricao em mobile */
+  .descricao h2, .descricao h3 {
+      color: #0c0279;
+  }
 
+  .litros input,
+  .litros button {
+    font-size: 14px; /* Ajusta o tamanho da fonte dos inputs/botões */
+    padding: 10px; /* Ajusta o padding dos inputs/botões */
+  }
+}
 
+/* Para telas ainda menores, como celulares (opcional, para ajustes mais finos) */
+@media screen and (max-width: 480px) {
+  body {
+    padding: 15px 5px; /* Mais ajustes no padding do body */
+  }
 
+  div {
+    max-width: 95%; /* As divs ocupam ainda mais espaço */
+    padding: 15px; /* Reduz mais o padding */
+    border-radius: 15px; /* Pode arredondar menos as bordas */
+  }
 
-
-
-
+  div h1 {
+    font-size: 20px; /* Mais um ajuste no tamanho do h1 */
+  }
+}
