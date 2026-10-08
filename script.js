@@ -1,133 +1,74 @@
-function garantirPuter() { 
-
-    return new Promise((resolve, reject) => { 
-
-        if (window.puter) { 
-
-            resolve(window.puter); 
-
-            return; 
-
-        } 
-
-        const script = document.createElement('script'); 
-
-        // URL Oficial corrigida com o arquivo .js explícito 
-
-        script.src = "https://puter.com";  
-
-        script.onload = () => resolve(window.puter); 
-
-        script.onerror = () => reject(new Error("Não foi possível carregar a biblioteca do Puter.")); 
-
-        document.head.appendChild(script); 
-
-    }); 
-
-} 
-
- 
-
-async function lerFoto() { 
-
-    const inputFoto = document.querySelector('.foto'); 
-
-    const txtEspecie = document.querySelector('.especie'); 
-
-    const txtCuidados = document.querySelector('.cuidados'); 
-
- 
-
-    // 1. Verifica se o usuário realmente escolheu um arquivo 
-
-    if (!inputFoto.files || inputFoto.files.length === 0) { 
-
-        return; 
-
-    } 
-
- 
-
-    // 2. Pega o primeiro arquivo selecionado da lista 
-
-    const arquivoImagem = inputFoto.files[0]; 
-
- 
-
-    // Exibe o status de carregamento na tela 
-
-    txtEspecie.innerHTML = "<em>Analisando imagem...</em>"; 
-
-    txtCuidados.innerHTML = "<em>Buscando informações de cuidados...</em>"; 
-
- 
-
-    try { 
-
-        // Garante o carregamento do Puter 
-
-        const puterInstancia = await garantirPuter(); 
-
- 
-
-        // Prompt detalhado para forçar a separação por '---' 
-
-        const prompt = `Analise a imagem deste peixe. Responda estritamente dividindo o texto em duas partes separadas exatamente por três hífens (---).  
-
-        Na primeira parte, diga o Nome Científico e o Nome Popular da espécie.  
-
-        Na segunda parte, liste detalhadamente os cuidados básicos de aquarismo (tamanho do aquário, pH da água, temperatura ideal e alimentação).  
-
-        Não adicione nenhuma saudação ou conclusão além disso.`; 
-
- 
-
-        // 3. Envia o arquivo de imagem diretamente dentro da lista de mídias 
-
-        const respostaOriginal = await puterInstancia.ai.chat(prompt, [arquivoImagem], {  
-
-            model: 'gpt-4o-mini'  
-
-        }); 
-
- 
-
-        // 4. Separa o texto retornado onde estão os três hífens 
-
-        const partes = respostaOriginal.split('---'); 
-
- 
-
-        if (partes.length >= 2) { 
-
-            // Insere a primeira metade na espécie e a segunda metade nos cuidados 
-
-            txtEspecie.innerText = partes[0].trim(); 
-
-            txtCuidados.innerText = partes[1].trim(); 
-
-        } else { 
-
-            // Caso a IA não use os hífens, exibe o texto inteiro na espécie 
-
-            txtEspecie.innerText = respostaOriginal; 
-
-            txtCuidados.innerText = "Não foi possível separar os cuidados automaticamente."; 
-
-        } 
-
- 
-
-    } catch (erro) { 
-
-        console.error("Erro ao identificar o peixe:", erro); 
-
-        txtEspecie.innerText = "Erro ao identificar o peixe."; 
-
-        txtCuidados.innerText = "Por favor, certifique-se de que está conectado à internet e tente novamente."; 
-
-    } 
-
+function carregarBibliotecaPuter() {
+    return new Promise((resolve, reject) => {
+        if (window.puter) {
+            resolve(window.puter);
+            return;
+        }
+
+        const script = document.createElement('script');
+        // Usando o espelho oficial e estável do UNPKG para contornar bloqueios de rede
+        script.src = "https://unpkg.com";
+        script.async = true;
+        
+        script.onload = () => {
+            if (window.puter) {
+                resolve(window.puter);
+            } else {
+                reject(new Error("Puter carregado, mas objeto não encontrado."));
+            }
+        };
+        
+        script.onerror = () => reject(new Error("Falha ao carregar o espelho alternativo do Puter."));
+        document.head.appendChild(script);
+    });
+}
+
+async function lerFoto() {
+    const inputFoto = document.querySelector('.foto');
+    const txtEspecie = document.querySelector('.especie');
+    const txtCuidados = document.querySelector('.cuidados');
+
+    if (!inputFoto.files || inputFoto.files.length === 0) {
+        return;
+    }
+
+    const arquivoImagem = inputFoto.files;
+
+    txtEspecie.innerHTML = "<em>Carregando inteligência artificial...</em>";
+    txtCuidados.innerHTML = "<em>Aguarde...</em>";
+
+    try {
+        // Carrega e ativa o Puter de forma garantida
+        const puterSeguro = await carregarBibliotecaPuter();
+
+        txtEspecie.innerHTML = "<em>Analisando imagem do peixe...</em>";
+        txtCuidados.innerHTML = "<em>Buscando informações de cuidados...</em>";
+
+        const prompt = `Analise a imagem deste peixe. Responda estritamente dividindo o texto em duas partes separadas exatamente por três hífens (---). 
+        Na primeira parte, diga o Nome Científico e o Nome Popular da espécie. 
+        Na segunda parte, liste detalhadamente os cuidados básicos de aquarismo (tamanho do aquário, pH da água, temperatura ideal e alimentação). 
+        Não adicione nenhuma saudação ou conclusão além disso.`;
+
+        // Envia para a IA do Puter usando o modelo multimodal gpt-4o-mini
+        const respostaOriginal = await puterSeguro.ai.chat(prompt, arquivoImagem, { 
+            model: 'gpt-4o-mini' 
+        });
+
+        const partes = respostaOriginal.split('---');
+
+        if (partes.length >= 2) {
+            txtEspecie.innerText = partes.trim();
+            txtCuidados.innerText = partes.trim();
+        } else {
+            txtEspecie.innerText = respostaOriginal;
+            txtCuidados.innerText = "Não foi possível separar as seções automaticamente.";
+        }
+
+    } catch (erro) {
+        console.error("Erro na aplicação:", erro);
+        txtEspecie.innerText = "Erro ao conectar com o Puter.ai.";
+        txtCuidados.innerText = "Verifique sua conexão ou tente rodar o projeto usando o Live Server do VS Code.";
+    }
 } 
 
  
